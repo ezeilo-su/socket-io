@@ -14,18 +14,18 @@ app.get('/', (req, res) => {
 // create tech namespace
 const tech = io.of('/tech');
 
-io.on('connection', (socket) => {
+tech.on('connection', (socket) => {
   console.log('user connected');
 
   socket.on('message', (msg) => {
     console.log(`message: ${msg}`);
 
-    io.emit('message', msg);
+    tech.emit('message', msg);
   });
 
   socket.on('disconnect', () => {
     console.log(`user with socket id ${socket.id} disconnected`);
 
-    io.emit('message', 'user disconnected');
+    tech.emit('message', 'user disconnected');
   });
 });
