@@ -80,19 +80,21 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      const room = 'javascript';
       const socket = io('/tech');
       // calling io() without a socket argument assumes connection to the same localhost
       //  otherwise, socket should be passed to io(), eg: 'http://localhost:3000'
 
       $('form').submit(() => {
-        socket.emit('message', $('#m').val());
+        let msg = $('#m').val();
+        socket.emit('message', { msg, room });
         $('#m').val('');
         return false;
       });
 
       socket.on('connect', () => {
         // emitting to everybody
-        socket.emit('message', 'user connected');
+        socket.emit('join', { room });
       });
 
       socket.on('message', (msg) => {
