@@ -11,6 +11,18 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
+app.get('/javascript', (req, res) => {
+  res.sendFile(__dirname + '/public/javascript.html');
+});
+
+app.get('/swift', (req, res) => {
+  res.sendFile(__dirname + '/public/swift.html');
+});
+
+app.get('/css', (req, res) => {
+  res.sendFile(__dirname + '/public/css.html');
+});
+
 // create tech namespace
 // within the tech namespace, we have a room called javascript
 const tech = io.of('/tech');
@@ -27,7 +39,7 @@ tech.on('connection', (socket) => {
     tech.in(data.room).emit('message', data.msg);
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', (user) => {
     console.log(`user with socket id ${socket.id} disconnected`);
 
     tech.emit('message', 'user disconnected');

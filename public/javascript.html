@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Socket.io</title>
+
     <!-- CSS only -->
     <link
       rel="stylesheet"
@@ -36,21 +37,33 @@
     </style>
   </head>
   <body>
-    <div class="jumbotron jumbotron-fluid">
-      <div class="container">
-        <h1 class="display-4">A simple chat app using socket.io</h1>
-        <p class="lead">Select which room you'd like to join below!</p>
-      </div>
-    </div>
-    <div class="container-fluid">
+    <div class="container-fluid mt-4">
       <div class="row">
-        <ul class="list-group col">
-          <a href="/javascript" class="list-group-item list-group-item-action"
-            >Javascript</a
-          >
-          <a href="/swift" class="list-group-item">Swift</a>
-          <a href="/css" class="list-group-item">CSS</a>
-        </ul>
+        <ul id="messages"></ul>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <form action="">
+            <div class="input-group mb-3">
+              <input
+                id="m"
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                placeholder="Message..."
+                aria-label="Message..."
+                aria-describedby="button-addon2"
+              />
+              <button
+                class="btn btn-secondary"
+                type="submit"
+                id="button-addon2"
+              >
+                Send
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
 
@@ -66,12 +79,28 @@
       crossorigin="anonymous"
     ></script>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
-      integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
-      crossorigin="anonymous"
-    ></script>
-
     <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const room = 'javascript';
+      const socket = io('/tech');
+      // calling io() without a socket argument assumes connection to the same localhost
+      //  otherwise, socket should be passed to io(), eg: 'http://localhost:3000'
+
+      $('form').submit(() => {
+        let msg = $('#m').val();
+        socket.emit('message', { msg, room });
+        $('#m').val('');
+        return false;
+      });
+
+      socket.on('connect', () => {
+        // emitting to everybody
+        socket.emit('join', { room });
+      });
+
+      socket.on('message', (msg) => {
+        $('#messages').append($('<li>').text(msg));
+      });
+    </script>
   </body>
 </html>
