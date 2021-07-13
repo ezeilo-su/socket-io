@@ -40,7 +40,6 @@ tech.on('connection', (socket) => {
   });
 
   socket.on('disconnect', (user) => {
-    console.log(`user with socket id ${socket.id} disconnected`);
 
     tech.emit('message', 'user disconnected');
   });
